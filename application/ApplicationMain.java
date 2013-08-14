@@ -48,10 +48,10 @@ public class ApplicationMain {
             }
         }
 
-        engineInstance = new Engine(new LWJGLDevice(), wndWidth, wndHeight, fullscreen);        
+        engineInstance = new Engine(new LWJGLDevice(), wndWidth, wndHeight, fullscreen);
         engineInstance.setTitle("IGDC #98 by KEFIR");
         engineInstance.setSceneSize(1920, 1080);
-        engineInstance.setCurrentState(new MainMenu());
+        engineInstance.setCurrentState(GameCore.getInstance());
         engineInstance.start();
     }
 }

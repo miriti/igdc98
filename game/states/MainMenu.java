@@ -2,9 +2,12 @@ package game.states;
 
 import engine.Engine;
 import engine.core.TextureManager;
+import engine.devices.input.GamePadInput;
+import engine.devices.input.Input;
 import engine.display.Button;
 import engine.display.DisplayObject;
 import engine.display.Image;
+import game.GameCore;
 
 /**
  *
@@ -28,5 +31,9 @@ public class MainMenu extends DisplayObject {
     @Override
     public void update(long deltaTime) {
         super.update(deltaTime);
+        GamePadInput inp = (GamePadInput) getInput();
+        if (inp.getData("0") == 1.0f) {
+            GameCore.getInstance().setState(new GameRound());
+        }
     }
 }
