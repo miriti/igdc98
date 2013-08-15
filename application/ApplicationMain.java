@@ -13,8 +13,8 @@ public class ApplicationMain {
 
     public static ApplicationMain Instance;
     public final Engine engineInstance;
-    private int wndWidth = 854;
-    private int wndHeight = 480;
+    private int wndWidth = 1280;
+    private int wndHeight = 720;
     private static String[] appArgs;
 
     public static void main(String[] args) {

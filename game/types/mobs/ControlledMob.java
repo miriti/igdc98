@@ -3,59 +3,106 @@ package game.types.mobs;
 import engine.core.types.Color;
 import engine.devices.input.GamePadInput;
 import engine.display.Quad;
+import game.types.weapons.bullets.Bullet;
+import org.lwjgl.util.vector.Vector2f;
 
 /**
  *
  * @author Michael Miriti <michael@miriti.ru>
  */
-public class ControlledMob extends Mob {
-
+abstract public class ControlledMob extends Mob {
+    
     protected final float CROSSHAIR_DISTANCE = 400;
-    private Quad body;
-    private Quad gun;
-    private Quad crosshair;
-
+    protected Vector2f aimVector = new Vector2f();
+    protected Quad crosshair;
+    protected float bodyRotation = 0;
+    protected float gunRotation = 0;
+    protected boolean haveControll = true;
+    private boolean _fire;
+    
     public ControlledMob() {
         super();
-
-        body = new Quad(100, 100, Color.RED, true);
-        addChild(body);
-
-        gun = new Quad(80, 50, Color.LIME, true);
-        addChild(gun);
-
-        crosshair = new Quad(10, 10, Color.YELLOW, true);
-        crosshair.setVisible(false);
-        addChildAt(crosshair, 0, -CROSSHAIR_DISTANCE);
+        initCrosshair();
     }
-
+    
+    private void initCrosshair() {
+        if (haveControll) {
+            crosshair = new Quad(10, 10, Color.YELLOW, true);
+            addChildAt(crosshair, 0, -CROSSHAIR_DISTANCE);
+        }
+    }
+    
     @Override
     public void update(long deltaTime) {
         super.update(deltaTime);
-
-        float lx = ((GamePadInput) getInput()).getData("x");
-        float ly = ((GamePadInput) getInput()).getData("y");
-
-        float rx = ((GamePadInput) getInput()).getData("rx");
-        float ry = ((GamePadInput) getInput()).getData("ry");
-        float gz = ((GamePadInput) getInput()).getData("z");
-
-        if ((Math.abs(lx) > 0.2f) || (Math.abs(ly) > 0.2f)) {
-            position.x += lx * 5;
-            position.y += ly * 5;
-            body.rotation = (float) ((float) Math.atan2(ly, lx) * (180f / Math.PI));
+        
+        if (haveControll) {
+            float lx = ((GamePadInput) getInput()).getData("x");
+            float ly = ((GamePadInput) getInput()).getData("y");
+            
+            float rx = ((GamePadInput) getInput()).getData("rx");
+            float ry = ((GamePadInput) getInput()).getData("ry");
+            float gz = ((GamePadInput) getInput()).getData("z");
+            
+            if ((Math.abs(lx) > 0.2f) || (Math.abs(ly) > 0.2f)) {
+                position.x += lx * 5;
+                position.y += ly * 5;
+                bodyRotation = (float) ((float) Math.atan2(ly, lx) * (180f / Math.PI));
+            }
+            
+            if ((Math.abs(rx) > 0.5f) || (Math.abs(ry) > 0.5f)) {
+                aimVector.set(rx, ry);
+                float l = aimVector.length();
+                aimVector.x /= l;
+                aimVector.y /= l;
+                crosshair.getPosition().set(aimVector.x * CROSSHAIR_DISTANCE, aimVector.y * CROSSHAIR_DISTANCE);
+                gunRotation = (float) ((float) Math.atan2(ry, rx) * (180f / Math.PI));
+            }
+            
+            if (crosshair.isVisible()) {
+                if ((gz < -0.5) && (gz > -1.5)) {
+                    fire();
+                } else {
+                    if (_fire) {
+                        _fire = false;
+                        fireFinished();
+                    }
+                }
+            }
         }
-
-        if ((Math.abs(rx) > 0.5f) || (Math.abs(ry) > 0.5f)) {
-            crosshair.setVisible(true);
-            crosshair.getPosition().set(rx * CROSSHAIR_DISTANCE, ry * CROSSHAIR_DISTANCE);
-            gun.rotation = (float) ((float) Math.atan2(ry, rx) * (180f / Math.PI));
+    }
+    
+    private void fire() {
+        if (!_fire) {
+            _fire = true;
+            fireStart();
         } else {
-            crosshair.setVisible(false);
+            fireProcess();
         }
-
-        if ((gz < -0.5) && (gz > -1.5)) {
-            System.out.println("Fire");
+    }
+    
+    protected void fireFinished() {
+    }
+    
+    protected void fireStart() {
+        Bullet bullet = new Bullet();
+        bullet.launch(new Vector2f(aimVector.x, aimVector.y));
+        parent.addChildAt(bullet, position.x, position.y);
+    }
+    
+    protected void fireProcess() {
+    }
+    
+    public boolean isHaveControll() {
+        return haveControll;
+    }
+    
+    public void setHaveControll(boolean haveControll) {
+        this.haveControll = haveControll;
+        if (!haveControll) {
+            if (crosshair != null) {
+                crosshair.setVisible(false);
+            }
         }
     }
 }
