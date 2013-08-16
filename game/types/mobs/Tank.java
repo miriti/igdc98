@@ -1,14 +1,14 @@
 package game.types.mobs;
 
-import engine.core.types.Color;
-import engine.display.Quad;
+import engine.core.TextureManager;
+import engine.display.Image;
 import game.types.TimeObject;
 
 /**
  *
  * @author Michael Miriti <michael@miriti.ru>
  */
-public class SimpleMob extends ControlledMob {
+public class Tank extends ControlledMob {
 
     protected Body body;
     protected Gun gun;
@@ -36,20 +36,20 @@ public class SimpleMob extends ControlledMob {
 
 class Body extends TimeObject {
 
-    private final Quad body;
+    private final Image body;
 
     public Body() {
-        body = new Quad(100, 100, Color.RED, true);
-        addChild(body);
+        body = new Image(TextureManager.getTexture("data/sprites/tank/body.png"));
+        addChildAt(body, -body.getWidth() / 2, -body.getHeight() / 2);
     }
 }
 
 class Gun extends TimeObject {
 
-    private final Quad gun;
+    private final Image gun;
 
     public Gun() {
-        gun = new Quad(80, 50, Color.LIME, true);
-        addChild(gun);
+        gun = new Image(TextureManager.getTexture("data/sprites/tank/gun.png"));
+        addChildAt(gun, -8f, -gun.getHeight() / 2);
     }
 }

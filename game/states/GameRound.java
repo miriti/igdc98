@@ -7,8 +7,10 @@ import game.GameCore;
 import game.core.CollisionEngine;
 import game.types.Collidable;
 import game.types.TimeObject;
+import game.types.mobs.AutoTank;
 import game.types.mobs.ControlledMob;
-import game.types.mobs.SimpleMob;
+import game.types.mobs.RocketLauncher;
+import game.types.mobs.Tank;
 import game.types.mobs.enemy.BossEnemy;
 import java.util.ArrayList;
 import org.lwjgl.input.Keyboard;
@@ -35,7 +37,8 @@ public class GameRound extends TimeObject {
             addChild(mob);
         }
 
-        player = new SimpleMob();
+        player = new RocketLauncher();
+
         addChildAt(player, 1920 / 2, 1080 / 2);
 
         addChildAt(new BossEnemy(), 0, 0);
