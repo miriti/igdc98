@@ -10,12 +10,12 @@ import game.types.TimeObject;
  */
 public class SimpleMob extends ControlledMob {
 
-    protected Quad body;
+    protected Body body;
     protected Gun gun;
 
     @Override
     protected void initMob() {
-        body = new Quad(100, 100, Color.RED, true);
+        body = new Body();
         addChild(body);
 
         gun = new Gun();
@@ -34,13 +34,22 @@ public class SimpleMob extends ControlledMob {
     }
 }
 
+class Body extends TimeObject {
+
+    private final Quad body;
+
+    public Body() {
+        body = new Quad(100, 100, Color.RED, true);
+        addChild(body);
+    }
+}
+
 class Gun extends TimeObject {
 
     private final Quad gun;
 
     public Gun() {
         gun = new Quad(80, 50, Color.LIME, true);
-        gun.rotation = 90f;
         addChild(gun);
     }
 }

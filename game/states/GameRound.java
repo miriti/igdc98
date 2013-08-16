@@ -1,7 +1,7 @@
 package game.states;
 
+import static engine.core.Logger.*;
 import engine.core.TextureManager;
-import engine.display.DisplayObject;
 import engine.display.Image;
 import game.GameCore;
 import game.core.CollisionEngine;
@@ -11,9 +11,7 @@ import game.types.mobs.ControlledMob;
 import game.types.mobs.SimpleMob;
 import game.types.mobs.enemy.BossEnemy;
 import java.util.ArrayList;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.vector.Vector2f;
 
 /**
  *
@@ -31,12 +29,9 @@ public class GameRound extends TimeObject {
     public GameRound() {
         ground = new Image(TextureManager.getTexture("data/grass-texture.jpg"), 6000, 6000);
         ground.setTiles(10, 10);
-        //addChildAt(ground, -3000, -3000);
-
-        System.out.println(preMobs.size());
+        addChildAt(ground, -3000, -3000);
         for (ControlledMob mob : preMobs) {
             mob.setHaveControll(false);
-            mob.playback(0);
             addChild(mob);
         }
 

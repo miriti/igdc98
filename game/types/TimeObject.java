@@ -16,11 +16,18 @@ public class TimeObject extends DisplayObject {
     public TimeObject() {
     }
 
-    protected TimeObjectFrame getFrame() {
-        TimeObjectFrame tof = new TimeObjectFrame();
+    protected void fillOutFrame(TimeObjectFrame tof) {
         tof.position = new Vector3f(position);
         tof.rotation = rotation;
+    }
 
+    protected TimeObjectFrame timeFrameFactory() {
+        return new TimeObjectFrame();
+    }
+
+    protected TimeObjectFrame getFrame() {
+        TimeObjectFrame tof = timeFrameFactory();
+        fillOutFrame(tof);
         return tof;
     }
 
@@ -41,6 +48,10 @@ public class TimeObject extends DisplayObject {
 
     public void playback(long frameNumber) {
         if (timeline.get(frameNumber) != null) {
+            if (!isVisible()) {
+                setVisible(true);
+            }
+
             for (int i = 0; i < children.size(); i++) {
                 DisplayObject c = children.get(i);
                 if (c instanceof TimeObject) {

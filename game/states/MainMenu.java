@@ -3,7 +3,6 @@ package game.states;
 import engine.Engine;
 import engine.core.TextureManager;
 import engine.devices.input.GamePadInput;
-import engine.devices.input.Input;
 import engine.display.Button;
 import engine.display.DisplayObject;
 import engine.display.Image;

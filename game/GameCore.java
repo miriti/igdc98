@@ -3,7 +3,7 @@ package game;
 import engine.Engine;
 import engine.devices.input.GamePadInput;
 import engine.display.DisplayObject;
-import game.states.MainMenu;
+import game.states.GameRound;
 
 /**
  *
@@ -21,10 +21,10 @@ public class GameCore extends DisplayObject {
         if (GamePadInput.available()) {
             Engine.getInstance().getDevice().setInput(new GamePadInput());
         }
-        setState(new MainMenu());
+        setState(new GameRound());
     }
 
-    public void setState(DisplayObject state) {
+    public final void setState(DisplayObject state) {
         if (currentState != null) {
             removeChild(currentState);
         }
