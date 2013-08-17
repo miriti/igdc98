@@ -1,8 +1,10 @@
-package game.types.mobs;
+package game.types.mobs.player;
 
 import engine.core.TextureManager;
 import engine.display.Image;
+import game.types.Collidable;
 import game.types.TimeObject;
+import game.types.mobs.ControlledMob;
 
 /**
  *
@@ -31,6 +33,15 @@ public class Tank extends ControlledMob {
 
         body.rotation = bodyRotation;
         gun.rotation = gunRotation;
+    }
+
+    @Override
+    public void collision(Collidable with) {
+    }
+
+    @Override
+    public float getRadius() {
+        return 30;
     }
 }
 

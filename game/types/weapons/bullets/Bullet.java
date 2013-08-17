@@ -6,19 +6,18 @@ import engine.display.Quad;
 import game.core.CollisionEngine;
 import game.types.Collidable;
 import game.types.TimeObject;
-import game.types.mobs.enemy.EnemyMob;
+import game.types.mobs.Mob;
+import java.util.ArrayList;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
  *
  * @author Michael Miriti <michael@miriti.ru>
  */
-public class Bullet extends TimeObject implements Collidable {
+abstract public class Bullet extends TimeObject implements Collidable {
 
     private final Quad image;
     private long liveTime = 0;
-    
-    
     protected Vector2f speedVector;
     protected float hitPower = 10;
     protected float speed = 20;
@@ -47,10 +46,14 @@ public class Bullet extends TimeObject implements Collidable {
         }
     }
 
+    abstract protected void hit(Mob hit);
+
     @Override
     public void collision(Collidable with) {
-        if (with instanceof EnemyMob) {
-            ((EnemyMob)with).hit(hitPower);
+        ArrayList<String> collideWith = getCollideWith();
+        if (collideWith.contains(with.getGroup())) {
+            ((Mob) with).hit(hitPower);
+            hit((Mob) with);
             parent.removeChild(this);
         }
     }

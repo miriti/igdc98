@@ -48,16 +48,4 @@ public class MobHealthBar extends DisplayObject {
 
         bar.setWidth(barWidth * fract);
     }
-
-    @Override
-    public void update(long deltaTime) {
-        super.update(deltaTime);
-
-        if (color.a > 0) {
-            color.a = color.a - 0.01f;
-        } else {
-            color.a = 0;
-        }
-
-    }
 }
