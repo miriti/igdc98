@@ -5,6 +5,8 @@ import engine.display.Image;
 import game.types.Collidable;
 import game.types.TimeObject;
 import game.types.mobs.ControlledMob;
+import game.types.weapons.bullets.Bullet;
+import game.types.weapons.bullets.PlayerRocket;
 
 /**
  *
@@ -15,11 +17,18 @@ public class RocketLauncher extends ControlledMob {
     private TimeObject body;
     private TimeObject gun;
 
+    public RocketLauncher() {
+        automatedFire = true;
+        fireDelay = 500;
+        initHealth(200);
+        initHealthBar(0, -80);
+    }
+
     @Override
     protected void initMob() {
         body = new TimeObject() {
             {
-                Image bodyImage = new Image(TextureManager.getTexture("data/sprites/rocket-launcher/body.png"));
+                Image bodyImage = new Image(TextureManager.getTexture("data/sprites/player/rocket-launcher/body.png"));
                 addChildAt(bodyImage, -bodyImage.getWidth() / 2, -bodyImage.getHeight() / 2);
             }
         };
@@ -27,14 +36,16 @@ public class RocketLauncher extends ControlledMob {
 
         gun = new TimeObject() {
             {
-                Image gunImage = new Image(TextureManager.getTexture("data/sprites/rocket-launcher/head.png"));
+                Image gunImage = new Image(TextureManager.getTexture("data/sprites/player/rocket-launcher/head.png"));
                 addChildAt(gunImage, -27f, -gunImage.getHeight() / 2);
             }
         };
         addChild(gun);
+    }
 
-        initHealth(100);
-        initHealthBar(0, -80);
+    @Override
+    protected Bullet produceBullet() {
+        return new PlayerRocket();
     }
 
     @Override

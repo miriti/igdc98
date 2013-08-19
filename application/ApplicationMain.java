@@ -3,7 +3,6 @@ package application;
 import engine.Engine;
 import engine.devices.LWJGLDevice;
 import game.GameCore;
-import game.states.MainMenu;
 
 /**
  *
@@ -49,7 +48,7 @@ public class ApplicationMain {
         }
 
         engineInstance = new Engine(new LWJGLDevice(), wndWidth, wndHeight, fullscreen);
-        engineInstance.setTitle("IGDC #98 by KEFIR");
+        engineInstance.setTitle("Squad Loop - IGDC #98 - KEFIR");
         engineInstance.setSceneSize(1920, 1080);
         engineInstance.setCurrentState(GameCore.getInstance());
         engineInstance.start();

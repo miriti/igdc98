@@ -1,13 +1,15 @@
 package game.types.mobs;
 
+import engine.core.Scheduler;
+import engine.core.SchedulerEvent;
 import engine.core.TextureManager;
 import engine.devices.input.GamePadInput;
 import engine.display.DisplayObject;
 import engine.display.Image;
 import game.GameCore;
 import game.core.CollisionEngine;
+import game.states.GameOver;
 import game.states.GameRound;
-import game.states.Shop;
 import game.types.Collidable;
 import game.types.TimeObjectFrame;
 import game.types.weapons.bullets.Bullet;
@@ -23,9 +25,9 @@ import org.lwjgl.util.vector.Vector3f;
 abstract public class ControlledMob extends Mob implements Collidable {
 
     protected final float CROSSHAIR_DISTANCE = 400;
-    protected final float PC_CROSSHAIR_DISTANCE = 540;
+    protected final float PC_CROSSHAIR_DISTANCE = 700;
     protected Vector2f aimVector = new Vector2f(1, 0);
-    protected DisplayObject crosshair;
+    public DisplayObject crosshair;
     protected float bodyRotation = 0;
     protected float gunRotation = 0;
     protected boolean haveControll = true;
@@ -50,8 +52,32 @@ abstract public class ControlledMob extends Mob implements Collidable {
     @Override
     protected void deathAction() {
         if (haveControll) {
-            GameRound.getInstance().restart();
+            Scheduler sched = new Scheduler();
+
+            SchedulerEvent ev;
+            haveControll = false;
+
+            if (GameRound.getMoney() >= 100) {
+                ev = new SchedulerEvent(1000, false) {
+                    @Override
+                    public void execute() {
+                        GameRound.getInstance().restart();
+                    }
+                };
+            } else {
+                ev = new SchedulerEvent(2000, false) {
+                    @Override
+                    public void execute() {
+                        GameCore.getInstance().setState(new GameOver());
+                    }
+                };
+            }
+
+            sched.addEvent(ev);
+            parent.updateables.add(sched);
         }
+
+        super.deathAction();
     }
 
     @Override
@@ -127,11 +153,8 @@ abstract public class ControlledMob extends Mob implements Collidable {
         }
 
         if ((Math.abs(rx) > 0.5f) || (Math.abs(ry) > 0.5f)) {
-            aimVector.set(rx, ry);
-            float l = aimVector.length();
-            aimVector.x /= l;
-            aimVector.y /= l;
-            crosshair.getPosition().set(aimVector.x * CROSSHAIR_DISTANCE, aimVector.y * CROSSHAIR_DISTANCE);
+            aimVector.set(rx * CROSSHAIR_DISTANCE, ry * CROSSHAIR_DISTANCE);
+            crosshair.getPosition().set(aimVector.x, aimVector.y);
             gunRotation = (float) ((float) Math.atan2(ry, rx) * (180f / Math.PI));
         }
 
@@ -197,9 +220,6 @@ abstract public class ControlledMob extends Mob implements Collidable {
 
 
         aimVector.set(crosshair.getPosition().x, crosshair.getPosition().y);
-        float l = aimVector.length();
-        aimVector.x /= l;
-        aimVector.y /= l;
 
         gunRotation = (float) ((float) Math.atan2(aimVector.y, aimVector.x) * (180f / Math.PI));
 
@@ -249,10 +269,8 @@ abstract public class ControlledMob extends Mob implements Collidable {
         }
     }
 
-    protected void produceBullet() {
-        Bullet bullet = new PlayerBullet();
-        bullet.launch(new Vector2f(aimVector.x, aimVector.y));
-        parent.addChildAt(bullet, position.x, position.y);
+    protected Bullet produceBullet() {
+        return new PlayerBullet();
     }
 
     private void fire() {
@@ -269,16 +287,22 @@ abstract public class ControlledMob extends Mob implements Collidable {
     }
 
     protected void fireStart() {
-        produceBullet();
+        fireBullet();
         if (automatedFire) {
             fireTime = fireDelay;
         }
     }
 
+    protected void fireBullet() {
+        Bullet bullet = produceBullet();
+        bullet.launch(aimVector);
+        parent.addChildAt(bullet, position.x, position.y);
+    }
+
     protected void fireProcess() {
         if (automatedFire) {
             if (fireTime <= 0) {
-                produceBullet();
+                fireBullet();
                 fireTime = fireDelay;
             }
         }
@@ -299,5 +323,9 @@ abstract public class ControlledMob extends Mob implements Collidable {
                 crosshair.setVisible(false);
             }
         }
+    }
+
+    public Vector2f getAimVector() {
+        return aimVector;
     }
 }

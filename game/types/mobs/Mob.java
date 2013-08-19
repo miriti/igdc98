@@ -1,5 +1,6 @@
 package game.types.mobs;
 
+import game.Sounds;
 import game.types.TimeObject;
 import game.types.TimeObjectFrame;
 
@@ -61,6 +62,7 @@ abstract public class Mob extends TimeObject {
 
     protected void deathAction() {
         if (parent != null) {
+            Sounds.getInstance().sndExplosion.playAsSoundEffect(1, 1, false);
             parent.removeChild(this);
         }
     }

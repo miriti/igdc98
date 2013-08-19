@@ -28,7 +28,7 @@ public class Loading extends DisplayObject {
     public void update(long deltaTime) {
         super.update(deltaTime);
         if (Sounds.getInstance().isLoaded()) {
-            GameCore.getInstance().setState(new Shop());
+            GameCore.getInstance().setState(new Intro());
             Sounds.getInstance().sndMusic.playAsMusic(1, 1, true);
         }
     }

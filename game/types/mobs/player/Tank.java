@@ -50,7 +50,7 @@ class Body extends TimeObject {
     private final Image body;
 
     public Body() {
-        body = new Image(TextureManager.getTexture("data/sprites/tank/body.png"));
+        body = new Image(TextureManager.getTexture("data/sprites/player/tank/body.png"));
         addChildAt(body, -body.getWidth() / 2, -body.getHeight() / 2);
     }
 }
@@ -60,7 +60,7 @@ class Gun extends TimeObject {
     private final Image gun;
 
     public Gun() {
-        gun = new Image(TextureManager.getTexture("data/sprites/tank/gun.png"));
+        gun = new Image(TextureManager.getTexture("data/sprites/player/tank/gun.png"));
         addChildAt(gun, -8f, -gun.getHeight() / 2);
     }
 }

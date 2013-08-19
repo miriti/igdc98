@@ -17,13 +17,14 @@ public class AutoTank extends ControlledMob {
 
     public AutoTank() {
         automatedFire = true;
+        fireDelay = 150;
     }
 
     @Override
     protected void initMob() {
         body = new TimeObject() {
             {
-                Image bodyImage = new Image(TextureManager.getTexture("data/sprites/auto-tank/body.png"));
+                Image bodyImage = new Image(TextureManager.getTexture("data/sprites/player/auto-tank/body.png"));
                 addChildAt(bodyImage, -bodyImage.getWidth() / 2, -bodyImage.getHeight() / 2);
             }
         };
@@ -31,7 +32,7 @@ public class AutoTank extends ControlledMob {
 
         gun = new TimeObject() {
             {
-                Image gunImage = new Image(TextureManager.getTexture("data/sprites/auto-tank/head.png"));
+                Image gunImage = new Image(TextureManager.getTexture("data/sprites/player/auto-tank/head.png"));
                 addChildAt(gunImage, -19f, -gunImage.getHeight() / 2);
             }
         };
@@ -39,6 +40,11 @@ public class AutoTank extends ControlledMob {
 
         initHealth(100);
         initHealthBar(0, -80);
+    }
+
+    @Override
+    protected void fireBullet() {
+        super.fireBullet();
     }
 
     @Override

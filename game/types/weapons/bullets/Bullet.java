@@ -1,8 +1,9 @@
 package game.types.weapons.bullets;
 
-import engine.core.types.Color;
+import engine.core.TextureManager;
 import engine.display.DisplayObject;
-import engine.display.Quad;
+import engine.display.Image;
+import game.Sounds;
 import game.core.CollisionEngine;
 import game.types.Collidable;
 import game.types.TimeObject;
@@ -16,37 +17,58 @@ import org.lwjgl.util.vector.Vector2f;
  */
 abstract public class Bullet extends TimeObject implements Collidable {
 
-    private final Quad image;
-    private long liveTime = 0;
+    private Image image;
     protected Vector2f speedVector;
+    protected long liveTime = 0;
     protected float hitPower = 10;
-    protected float speed = 20;
+    protected float speed = 40;
     protected long timeToLive = 2000;
+    protected float maxDistance = 1000;
+    private Vector2f flewDistance = new Vector2f();
 
     public Bullet() {
-        image = new Quad(8, 8, Color.YELLOW, true);
-        addChild(image);
+        initBullet();
+    }
+
+    protected void initBullet() {
+        image = new Image(TextureManager.getTexture("data/sprites/bullet.png"));
+        addChildAt(image, -image.getWidth() / 2, -image.getHeight() / 2);
     }
 
     public void launch(Vector2f vector) {
-        speedVector = vector;
+        speedVector = new Vector2f();
+        speedVector.set(vector);
+        float l = speedVector.length();
+        speedVector.x /= l;
+        speedVector.y /= l;
+
         speedVector.x *= speed;
         speedVector.y *= speed;
+
+        playSound();
     }
 
     @Override
     public void update(long deltaTime) {
         super.update(deltaTime);
-        if (liveTime >= timeToLive) {
+        if ((liveTime >= timeToLive) || (flewDistance.length() >= maxDistance)) {
             parent.removeChild(this);
         } else {
             liveTime += deltaTime;
             position.x += speedVector.x;
             position.y += speedVector.y;
+            flewDistance.x += speedVector.x;
+            flewDistance.y += speedVector.y;
         }
     }
 
-    abstract protected void hit(Mob hit);
+    protected void playSound() {
+        Sounds.getInstance().sndShot.playAsSoundEffect(1, 1, false);
+    }
+
+    protected void hit(Mob hit) {
+        hit.hit(hitPower);
+    }
 
     @Override
     public void collision(Collidable with) {
@@ -60,7 +82,7 @@ abstract public class Bullet extends TimeObject implements Collidable {
 
     @Override
     public float getRadius() {
-        return 8f;
+        return 5f;
     }
 
     @Override

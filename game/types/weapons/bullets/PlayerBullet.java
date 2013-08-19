@@ -1,6 +1,5 @@
 package game.types.weapons.bullets;
 
-import game.types.mobs.Mob;
 import java.util.ArrayList;
 
 /**
@@ -14,10 +13,6 @@ public class PlayerBullet extends Bullet {
     static {
         collideWith = new ArrayList<>();
         collideWith.add("enemy");
-    }
-
-    @Override
-    protected void hit(Mob hit) {
     }
 
     @Override

@@ -6,6 +6,7 @@ import engine.display.Image;
 import game.types.Collidable;
 import game.types.TimeObject;
 import game.types.mobs.ControlledMob;
+import game.types.weapons.bullets.Bullet;
 
 /**
  *
@@ -16,11 +17,20 @@ public class Helicopter extends ControlledMob {
     private TimeObject body;
     private DisplayObject propeller;
 
+    public Helicopter() {
+
+        automatedFire = true;
+        fireDelay = 100;
+
+        initHealth(500);
+        initHealthBar(0, -80);
+    }
+
     @Override
     protected void initMob() {
         body = new TimeObject() {
             {
-                Image bodyImage = new Image(TextureManager.getTexture("data/sprites/helicopter/body.png"));
+                Image bodyImage = new Image(TextureManager.getTexture("data/sprites/player/helicopter/body.png"));
                 addChildAt(bodyImage, -155f, -bodyImage.getHeight() / 2);
             }
         };
@@ -29,7 +39,7 @@ public class Helicopter extends ControlledMob {
 
         propeller = new DisplayObject() {
             {
-                Image propellerImage = new Image(TextureManager.getTexture("data/sprites/helicopter/propeller.png"));
+                Image propellerImage = new Image(TextureManager.getTexture("data/sprites/player/helicopter/propeller.png"));
                 addChildAt(propellerImage, -propellerImage.getWidth() / 2, -propellerImage.getHeight() / 2);
             }
 
@@ -41,9 +51,21 @@ public class Helicopter extends ControlledMob {
         };
 
         addChild(propeller);
+    }
 
-        initHealth(100);
-        initHealthBar(0, -80);
+    @Override
+    protected void fireBullet() {
+        Bullet leftBullet = produceBullet();
+        Bullet rightBullet = produceBullet();
+
+        leftBullet.getPosition().set(position.x + 25 * (float) Math.sin(gunRotation * (Math.PI / 180)), position.y - 25 * (float) Math.cos(gunRotation * (Math.PI / 180)));
+        rightBullet.getPosition().set(position.x - 25 * (float) Math.sin(gunRotation * (Math.PI / 180)), position.y + 25 * (float) Math.cos(gunRotation * (Math.PI / 180)));
+
+        leftBullet.launch(aimVector);
+        rightBullet.launch(aimVector);
+
+        parent.addChild(leftBullet);
+        parent.addChild(rightBullet);
     }
 
     @Override
