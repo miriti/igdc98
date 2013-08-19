@@ -2,11 +2,11 @@ package game;
 
 import engine.Engine;
 import static engine.core.Logger.*;
+import engine.core.types.Color;
 import engine.devices.input.GamePadInput;
 import engine.devices.input.PCInput;
 import engine.display.DisplayObject;
-import game.states.GameRound;
-import game.states.Shop;
+import game.states.Loading;
 
 /**
  *
@@ -21,6 +21,8 @@ public class GameCore extends DisplayObject {
         if (instance != null) {
             throw new Error("Singletone");
         }
+        
+        Engine.getInstance().getDevice().setClearColor(Color.WHITE);
 
         if (GamePadInput.available()) {
             trace("Gamepad found!");
@@ -28,7 +30,7 @@ public class GameCore extends DisplayObject {
         } else {
             ((PCInput) Engine.getInstance().getDevice().getInput()).setCursorVisible(false);
         }
-        setState(new Shop());
+        setState(new Loading());
     }
 
     public final void setState(DisplayObject state) {

@@ -5,12 +5,24 @@ import engine.devices.input.PCInput;
 import engine.display.DisplayObject;
 import engine.display.Image;
 import game.GameCore;
+import game.Sounds;
 import game.core.CollisionEngine;
 import game.types.Collidable;
 import game.types.TimeObject;
 import game.types.mobs.ControlledMob;
 import game.types.mobs.enemy.BossEnemy;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
  *
@@ -29,7 +41,7 @@ public class GameRound extends TimeObject {
 
     public GameRound(ControlledMob playerMob) {
         instance = this;
-        ground = new Image(TextureManager.getTexture("data/grass-texture.jpg"), 6000, 6000);
+        ground = new Image(TextureManager.getTexture("data/sand-texture.jpg"), 6000, 6000);
         ground.setTiles(10, 10);
         addChildAt(ground, -3000, -3000);
 

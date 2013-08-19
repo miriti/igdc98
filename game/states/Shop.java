@@ -27,7 +27,6 @@ public class Shop extends DisplayObject {
     private int switchTimeout = SWITCH_TIMEOUT;
     
     public Shop() {
-        addChild(new Quad(1920, 1080, Color.WHITE));
         shopItems = new ShopItem[]{
             new ShopItem() {
                 @Override
